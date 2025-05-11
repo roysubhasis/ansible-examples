@@ -1,5 +1,8 @@
 - name: Sample Ansible Tasks
   hosts: localhost
+  vars:
+    src_dir: "/home/subhasis/src_folder/"
+    target_dir: "/home/subhasis/target_folder/"
   tasks:
     - name: Print Hello, World!
       debug:
@@ -24,3 +27,17 @@
       tags:
         - copy-files
 
+    # Pass file names as extra-vars and copy the files from src to target folder
+    # example : --extra-vars "file_patterns=create_db.sql,alter_table.sql,payload.json"
+    - name: Split file patterns into a list
+      set_fact:
+        file_list: "{{ file_patterns.split(',') }}"
+      tags: copy-all-files
+
+    - name: Copy each file from source to target
+      copy:
+        src: "{{ src_dir }}{{ item }}"
+        dest: "{{ target_dir }}{{ item }}"
+        remote_src: yes
+      loop: "{{ file_list }}"
+      tags: copy-all-files

@@ -17,3 +17,8 @@ ansible-playbook <yaml file name>
 ansible-playbook sample_tasks.yaml --tags print-msg;
 ansible-playbook sample_tasks.yaml --tags copy-files;
 ```
+
+### _Run ansible with extra params_
+```
+ansible-playbook sample_tasks.yaml --extra-vars "file_patterns=create_db.sql,alter_table.sql,payload.json" --tags copy-all
+```
