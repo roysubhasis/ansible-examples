@@ -1,0 +1,26 @@
+- name: Sample Ansible Tasks
+  hosts: localhost
+  tasks:
+    - name: Print Hello, World!
+      debug:
+        msg: "Hello, World!"
+      tags:
+        - print-msg
+
+    - name: Find files matching with wildcard pattern in a spcific folder
+      find:
+        paths: /home/subhasis/src_folder/   #src folder path
+        patterns: "file*.txt"
+      register: found_files
+      tags:
+        - copy-files
+
+    - name: Copy and rename each file to a different folder and rename file with date and time
+      copy:
+        src: "{{ item.path }}"
+        dest: "/home/subhasis/target_folder/{{ item.path | basename | regex_replace('(.*)\\.txt', '\\1') }}_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}{{ ansible_date_time.second }}.txt"
+        remote_src: yes
+      loop: "{{ found_files.files }}"
+      tags:
+        - copy-files
+
