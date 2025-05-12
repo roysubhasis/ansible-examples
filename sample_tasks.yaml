@@ -41,3 +41,30 @@
         remote_src: yes
       loop: "{{ file_list }}"
       tags: copy-all-files
+      
+    # Pass file names and CR number as extra-vars and copy the files whose first line matches with the CR number
+    # example : --extra-vars "file_patterns=create_db.sql,alter_table.sql,payload.json cr_number=CR12345"
+    - name: Split file patterns into a list
+      set_fact:
+        file_list: "{{ file_patterns.split(',') }}"
+      tags:
+        - copy-only-crnumber-file
+
+    - name: Check if the first line of each file matches cr_number
+      command: "head -n 1 {{ src_dir }}{{ item }}"
+      register: file_check_results
+      with_items: "{{ file_list }}"
+      tags:
+        - copy-only-crnumber-file
+
+    - name: Copy each file from source to target if the first line matches cr_number
+      copy:
+        src: "{{ src_dir }}{{ item.item }}"
+        dest: "{{ target_dir }}{{ item.item }}"
+        remote_src: yes
+      with_items: "{{ file_check_results.results }}"
+      when: item.stdout | regex_replace('^--- ', '') == cr_number
+      tags:
+        - copy-only-crnumber-file
+          
+    
