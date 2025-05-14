@@ -1,0 +1,19 @@
+---
+- name: create directory
+  file:
+    path: "{{item}}"
+    mode: 0755
+    recurse: yes
+    state: directory
+  with_items:
+    - "/home/subhasis/{{child_folder_name}}"
+  tags: create-dir
+
+
+- name: delete directory
+  file:
+    path: "{{item}}"    
+    state: absent
+  with_items:
+    - "/home/subhasis/{{child_folder_name}}"
+  tags: delete-dir

@@ -1,0 +1,6 @@
+- name: my project
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - sql_executor
+    
