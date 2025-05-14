@@ -1,0 +1,5 @@
+---
+- name: Execute SQL query
+  ansible.builtin.shell: |
+    echo "Executing query on {{ dbname }} in {{ env }} environment"
+  tags: execute-query

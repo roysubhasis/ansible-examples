@@ -1,0 +1,9 @@
+---
+- name: Application Deployment
+  hosts: executesql
+  gather_facts: no
+  vars:
+    env: "{{ env }}"
+    dbname: "{{ dbname }}"
+  roles:
+    - { role: executesql, tags: ['execute-query'] }
